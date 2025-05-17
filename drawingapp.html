@@ -1,358 +1,347 @@
-{\rtf1\ansi\ansicpg949\cocoartf2761
-\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\froman\fcharset0 Times-Roman;\f1\fmodern\fcharset0 Courier;}
-{\colortbl;\red255\green255\blue255;\red0\green0\blue0;}
-{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;}
-\paperw11900\paperh16840\margl1440\margr1440\vieww29200\viewh15760\viewkind0
-\deftab720
-\pard\pardeftab720\sa240\partightenfactor0
+&lt;immersive id="drawing_sound_app" type="code" title="Doodle Sound App">
+&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+&lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot;&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+    &lt;title&gt;Doodle Sound App&lt;/title&gt;
+    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;
+    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js&quot;&gt;&lt;/script&gt;
+    &lt;link href=&quot;https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;
+    &lt;style&gt;
+        body {
+            font-family: &#39;Inter&#39;, sans-serif;
+            overscroll-behavior: none; /* Prevents pull-to-refresh on mobile */
+        }
+        .touch-action-none {
+            touch-action: none;
+        }
+        .color-button {
+            transition: transform 0.1s ease-in-out;
+        }
+        .color-button.selected {
+            transform: scale(1.2);
+            border-width: 3px;
+        }
+        .action-button {
+            transition: background-color 0.2s ease, transform 0.1s ease;
+        }
+        .action-button:active {
+            transform: scale(0.95);
+        }
+        #messageBox {
+            transition: opacity 0.5s ease-in-out;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+&lt;body class=&quot;bg-slate-900 text-white flex flex-col items-center justify-center min-h-screen p-4 select-none&quot;&gt;
 
-\f0\fs24 \cf0 \expnd0\expndtw0\kerning0
-\outl0\strokewidth0 \strokec2 &lt;immersive id="drawing_sound_app" type="code" title="Doodle Sound App">\
-\pard\pardeftab720\partightenfactor0
-\cf0 HTML\
-\
-\pard\pardeftab720\partightenfactor0
+<div class="bg-slate-800 p-6 rounded-xl shadow-2xl w-full max-w-md">
+<h1 class="text-3xl font-bold text-center mb-6 text-sky-400">DoodleSound</h1>
 
-\f1\fs26 \cf0 &lt;!DOCTYPE html&gt;\
-&lt;html lang=&quot;en&quot;&gt;\
-&lt;head&gt;\
-    &lt;meta charset=&quot;UTF-8&quot;&gt;\
-    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;\
-    &lt;title&gt;Doodle Sound App&lt;/title&gt;\
-    &lt;script src=&quot;https://cdn.tailwindcss.com&quot;&gt;&lt;/script&gt;\
-    &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js&quot;&gt;&lt;/script&gt;\
-    &lt;link href=&quot;https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap&quot; rel=&quot;stylesheet&quot;&gt;\
-    &lt;style&gt;\
-        body \{\
-            font-family: &#39;Inter&#39;, sans-serif;\
-            overscroll-behavior: none; /* Prevents pull-to-refresh on mobile */\
-        \}\
-        .touch-action-none \{\
-            touch-action: none;\
-        \}\
-        .color-button \{\
-            transition: transform 0.1s ease-in-out;\
-        \}\
-        .color-button.selected \{\
-            transform: scale(1.2);\
-            border-width: 3px;\
-        \}\
-        .action-button \{\
-            transition: background-color 0.2s ease, transform 0.1s ease;\
-        \}\
-        .action-button:active \{\
-            transform: scale(0.95);\
-        \}\
-        #messageBox \{\
-            transition: opacity 0.5s ease-in-out;\
-        \}\
-    &lt;/style&gt;\
-&lt;/head&gt;\
-&lt;body class=&quot;bg-slate-900 text-white flex flex-col items-center justify-center min-h-screen p-4 select-none&quot;&gt;\
-\
-\pard\pardeftab720\sa240\partightenfactor0
+<div class="mb-6">
+    <p class="text-sm font-medium text-slate-400 mb-2 text-center">Choose a Color:</p>
+    <div id="colorPalette" class="grid grid-cols-5 gap-3">
+        </div>
+</div>
 
-\f0\fs24 \cf0 <div class="bg-slate-800 p-6 rounded-xl shadow-2xl w-full max-w-md"> <h1 class="text-3xl font-bold text-center mb-6 text-sky-400">DoodleSound</h1>\
-\pard\pardeftab720\partightenfactor0
+<div class="mb-6">
+    <p class="text-sm font-medium text-slate-400 mb-2 text-center">Doodle Area:</p>
+    <canvas id="doodleCanvas" class="w-full h-64 bg-white rounded-lg shadow-inner touch-action-none border-2 border-slate-700"></canvas>
+</div>
 
-\f1\fs26 \cf0 <div class="mb-6">\
-    <p class="text-sm font-medium text-slate-400 mb-2 text-center">Choose a Color:</p>\
-    <div id="colorPalette" class="grid grid-cols-5 gap-3">\
-        </div>\
-</div>\
-\
-<div class="mb-6">\
-    <p class="text-sm font-medium text-slate-400 mb-2 text-center">Doodle Area:</p>\
-    <canvas id="doodleCanvas" class="w-full h-64 bg-white rounded-lg shadow-inner touch-action-none border-2 border-slate-700"></canvas>\
-</div>\
-\
-<div class="grid grid-cols-2 gap-4 mb-6">\
-    <button id="playSoundButton" class="action-button bg-sky-500 hover:bg-sky-600 text-white font-semibold py-3 px-4 rounded-lg shadow-md w-full">\
-        Turn Drawing into Sound\
-    </button>\
-    <button id="clearCanvasButton" class="action-button bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-4 rounded-lg shadow-md w-full">\
-        Clear Doodle\
-    </button>\
-</div>\
-\
-<div id="messageBox" class="hidden bg-slate-700 p-3 rounded-md text-center text-sm">\
-    <p id="messageText"></p>\
-</div>\
-\pard\pardeftab720\sa240\partightenfactor0
+<div class="grid grid-cols-2 gap-4 mb-6">
+    <button id="playSoundButton" class="action-button bg-sky-500 hover:bg-sky-600 text-white font-semibold py-3 px-4 rounded-lg shadow-md w-full">
+        Turn Drawing into Sound
+    </button>
+    <button id="clearCanvasButton" class="action-button bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-4 rounded-lg shadow-md w-full">
+        Clear Doodle
+    </button>
+</div>
 
-\f0\fs24 \cf0 </div>\
-<script> // --- Global Variables --- const canvas = document.getElementById('doodleCanvas'); const ctx = canvas.getContext('2d'); const colorPaletteContainer = document.getElementById('colorPalette'); const playSoundButton = document.getElementById('playSoundButton'); const clearCanvasButton = document.getElementById('clearCanvasButton'); const messageBox = document.getElementById('messageBox'); const messageText = document.getElementById('messageText');\
-\pard\pardeftab720\partightenfactor0
+<div id="messageBox" class="hidden bg-slate-700 p-3 rounded-md text-center text-sm">
+    <p id="messageText"></p>
+</div>
+</div>
 
-\f1\fs26 \cf0 let drawing = false;\
-let currentColor = '#FF0000'; // Default color: Red\
-let currentLineWidth = 5;\
-\
-// Available colors for the palette\
-const colors = [\
-\pard\pardeftab720\sa240\partightenfactor0
+<script>
+// --- Global Variables ---
+const canvas = document.getElementById('doodleCanvas');
+const ctx = canvas.getContext('2d');
+const colorPaletteContainer = document.getElementById('colorPalette');
+const playSoundButton = document.getElementById('playSoundButton');
+const clearCanvasButton = document.getElementById('clearCanvasButton');
+const messageBox = document.getElementById('messageBox');
+const messageText = document.getElementById('messageText');
 
-\f0\fs24 \cf0 \{ name: 'Red', hex: '#EF4444' \}, \{ name: 'Orange', hex: '#F97316' \}, \{ name: 'Amber', hex: '#F59E0B' \}, \{ name: 'Yellow', hex: '#EAB308' \}, \{ name: 'Lime', hex: '#84CC16' \}, \{ name: 'Green', hex: '#22C55E' \}, \{ name: 'Emerald', hex: '#10B981' \}, \{ name: 'Teal', hex: '#14B8A6' \}, \{ name: 'Cyan', hex: '#06B6D4' \}, \{ name: 'Sky', hex: '#0EA5E9' \}, \{ name: 'Blue', hex: '#3B82F6' \}, \{ name: 'Indigo', hex: '#6366F1' \}, \{ name: 'Violet', hex: '#8B5CF6' \}, \{ name: 'Purple', hex: '#A855F7' \}, \{ name: 'Fuchsia', hex: '#D946EF' \}, \{ name: 'Pink', hex: '#EC4899' \}, \{ name: 'Rose', hex: '#F43F5E' \}, \{ name: 'Slate Gray', hex: '#64748B'\}, \{ name: 'Black', hex: '#000000'\}, \{ name: 'White', hex: '#FFFFFF'\} ];\
-\pard\pardeftab720\partightenfactor0
+let drawing = false;
+let currentColor = '#FF0000'; // Default color: Red
+let currentLineWidth = 5;
 
-\f1\fs26 \cf0 // --- Initialization ---\
-function initialize() \{\
-    setupCanvas();\
-    populateColorPalette();\
-    addEventListeners();\
-    selectColorButton(colorPaletteContainer.firstChild); // Select the first color by default\
-\}\
-\
-// --- Canvas Setup ---\
-function setupCanvas() \{\
-    // Set canvas dimensions based on its displayed size\
-    const dpr = window.devicePixelRatio || 1;\
-    const rect = canvas.getBoundingClientRect();\
-    canvas.width = rect.width * dpr;\
-    canvas.height = rect.height * dpr;\
-    ctx.scale(dpr, dpr); // Scale context for HiDPI displays\
-\
-    ctx.lineCap = 'round';\
-    ctx.lineJoin = 'round';\
-    ctx.strokeStyle = currentColor;\
-    ctx.lineWidth = currentLineWidth;\
-    clearCanvas(); // Fill with white initially\
-\}\
-\
-// --- Color Palette ---\
-function populateColorPalette() \{\
-    colors.forEach(colorObj => \{\
-        const button = document.createElement('button');\
-        button.style.backgroundColor = colorObj.hex;\
-        button.setAttribute('data-color', colorObj.hex);\
-        button.setAttribute('aria-label', colorObj.name);\
-        button.className = 'color-button w-full h-10 rounded-md border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-sky-400';\
-        if (colorObj.hex === '#FFFFFF') \{ // Special styling for white button\
-            button.classList.add('border-slate-400');\
-        \}\
-        button.addEventListener('click', () => \{\
-            currentColor = colorObj.hex;\
-            ctx.strokeStyle = currentColor;\
-            // Update selected state for buttons\
-            document.querySelectorAll('#colorPalette .color-button').forEach(btn => btn.classList.remove('selected', 'border-sky-400'));\
-            selectColorButton(button);\
-        \});\
-        colorPaletteContainer.appendChild(button);\
-    \});\
-\}\
-\
-function selectColorButton(buttonElement) \{\
-    if (buttonElement) \{\
-        buttonElement.classList.add('selected', 'border-sky-400');\
-        currentColor = buttonElement.getAttribute('data-color');\
-        ctx.strokeStyle = currentColor;\
-    \}\
-\}\
-\
-// --- Drawing Logic ---\
-function getMousePos(event) \{\
-    const rect = canvas.getBoundingClientRect();\
-    let x, y;\
-    if (event.touches && event.touches.length > 0) \{\
-        x = event.touches[0].clientX - rect.left;\
-        y = event.touches[0].clientY - rect.top;\
-    \} else \{\
-        x = event.clientX - rect.left;\
-        y = event.clientY - rect.top;\
-    \}\
-    return \{ x, y \};\
-\}\
-\
-function startDrawing(event) \{\
-    event.preventDefault(); // Prevent scrolling on touch\
-    drawing = true;\
-    const \{ x, y \} = getMousePos(event);\
-    ctx.beginPath();\
-    ctx.moveTo(x, y);\
-\}\
-\
-function draw(event) \{\
-    event.preventDefault();\
-    if (!drawing) return;\
-    const \{ x, y \} = getMousePos(event);\
-    ctx.lineTo(x, y);\
-    ctx.stroke();\
-\}\
-\
-function stopDrawing(event) \{\
-    event.preventDefault();\
-    if (!drawing) return;\
-    drawing = false;\
-    ctx.closePath();\
-\}\
-\
-// --- Sound Generation ---\
-async function generateAndPlaySound() \{\
-    showMessage("Processing doodle... please wait.", "info");\
-    playSoundButton.disabled = true;\
-    clearCanvasButton.disabled = true;\
-\
-    await Tone.start(); // Ensure AudioContext is started by user gesture\
-\
-    // Create a synth. Using a simple FM Synth.\
-    const synth = new Tone.Synth(\{\
-        oscillator: \{ type: "sine" \}, // sine, square, triangle, sawtooth\
-        envelope: \{\
-            attack: 0.01,\
-            decay: 0.2,\
-            sustain: 0.1,\
-            release: 0.5,\
-        \},\
-    \}).toDestination();\
-    \
-    // Create a reverb for a bit more atmosphere\
-    const reverb = new Tone.Reverb(0.7).toDestination();\
-    synth.connect(reverb);\
-\
-    // Analyze canvas data\
-    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);\
-    const data = imageData.data; // RGBA array\
-\
-    const notes = [];\
-    const pixelsPerNote = 20; // How many horizontal pixels to scan for a "column" of notes\
-    const minPitch = 200; // Hz C3\
-    const maxPitch = 1000; // Hz B5\
-\
-    // Iterate through the canvas by columns\
-    for (let x = 0; x < canvas.width; x += pixelsPerNote) \{\
-        let ySum = 0;\
-        let count = 0;\
-        let rAvg = 0, gAvg = 0, bAvg = 0;\
-\
-        // Scan a vertical strip\
-        for (let y = 0; y < canvas.height; y++) \{\
-            const index = (y * canvas.width + x) * 4;\
-            const r = data[index];\
-            const g = data[index + 1];\
-            const b = data[index + 2];\
-            const a = data[index + 3];\
-\
-            // Consider non-white and somewhat opaque pixels\
-            if (a > 100 && (r < 250 || g < 250 || b < 250)) \{ \
-                ySum += y;\
-                rAvg += r;\
-                gAvg += g;\
-                bAvg += b;\
-                count++;\
-            \}\
-        \}\
-\
-        if (count > 5) \{ // If enough pixels found in this column\
-            const avgY = ySum / count;\
-            const pitch = Tone.Midi(Math.floor(Tone.ftom(minPitch + (1 - avgY / canvas.height) * (maxPitch - minPitch)))).toFrequency();\
-            \
-            // Color influence on note properties (simple example)\
-            // Map average R, G, B to something (e.g., duration, volume, or filter)\
-            const avgColorBrightness = (rAvg/count + gAvg/count + bAvg/count) / (3 * 255); // Normalized 0-1\
-            const duration = 0.1 + avgColorBrightness * 0.3; // Shorter notes for darker colors, longer for brighter\
-            const velocity = 0.3 + (1 - avgColorBrightness) * 0.7; // Louder for darker colors\
-\
-            notes.push(\{ pitch, time: x / canvas.width, duration, velocity \});\
-        \}\
-    \}\
-\
-    if (notes.length === 0) \{\
-        showMessage("No significant drawing found to make sound. Doodle more!", "warning");\
-        playSoundButton.disabled = false;\
-        clearCanvasButton.disabled = false;\
-        return;\
-    \}\
-    \
-    // Schedule and play notes\
-    const now = Tone.now();\
-    let totalDuration = 0;\
-    notes.forEach(note => \{\
-        synth.triggerAttackRelease(note.pitch, note.duration, now + note.time * 2, note.velocity); // Play over 2 seconds\
-        if (now + note.time * 2 + note.duration > totalDuration) \{\
-            totalDuration = now + note.time * 2 + note.duration;\
-        \}\
-    \});\
-    \
-    showMessage("Playing your doodle sound!", "success");\
-\
-    // Re-enable buttons after sound finishes (approx)\
-    setTimeout(() => \{\
-        if (Tone.Transport.state === "started") \{\
-             // Tone.Transport.stop(); // Stop if you were using Transport\
-        \}\
-        showMessage("Sound finished. Feel free to doodle and play again!", "info");\
-        playSoundButton.disabled = false;\
-        clearCanvasButton.disabled = false;\
-    \}, (totalDuration - now + 0.5) * 1000); // Add a little buffer\
-\}\
-\
-\
-// --- UI Helper Functions ---\
-function clearCanvas() \{\
-    ctx.fillStyle = 'white'; // Set fill to white\
-    ctx.fillRect(0, 0, canvas.width / (window.devicePixelRatio || 1) , canvas.height/ (window.devicePixelRatio || 1)); // Clear considering DPR\
-    ctx.strokeStyle = currentColor; // Reset stroke color\
-    showMessage("Canvas cleared. Ready to doodle!", "info");\
-\}\
-\
-function showMessage(text, type = "info") \{\
-    messageText.textContent = text;\
-    messageBox.classList.remove('hidden', 'bg-sky-600', 'bg-yellow-500', 'bg-red-600', 'bg-slate-700');\
-    messageBox.classList.add('opacity-100');\
-\
-    if (type === "success") \{\
-        messageBox.classList.add('bg-green-500');\
-    \} else if (type === "warning") \{\
-        messageBox.classList.add('bg-yellow-500');\
-    \} else if (type === "error") \{\
-        messageBox.classList.add('bg-red-600');\
-    \} else \{ // info\
-        messageBox.classList.add('bg-sky-600');\
-    \}\
-    \
-    // Hide message after some time\
-    setTimeout(() => \{\
-         messageBox.classList.add('hidden');\
-         messageBox.classList.remove('opacity-100');\
-    \}, 4000);\
-\}\
-\
-// --- Event Listeners ---\
-function addEventListeners() \{\
-    // Mouse events\
-    canvas.addEventListener('mousedown', startDrawing);\
-    canvas.addEventListener('mousemove', draw);\
-    canvas.addEventListener('mouseup', stopDrawing);\
-    canvas.addEventListener('mouseleave', stopDrawing); // Stop drawing if mouse leaves canvas\
-\
-    // Touch events\
-    canvas.addEventListener('touchstart', startDrawing, \{ passive: false \});\
-    canvas.addEventListener('touchmove', draw, \{ passive: false \});\
-    canvas.addEventListener('touchend', stopDrawing, \{ passive: false \});\
-    canvas.addEventListener('touchcancel', stopDrawing, \{ passive: false \});\
-\
-\
-    playSoundButton.addEventListener('click', generateAndPlaySound);\
-    clearCanvasButton.addEventListener('click', clearCanvas);\
-\
-    // Resize canvas when window resizes\
-    window.addEventListener('resize', () => \{\
-        // Debounce resize event for performance\
-        clearTimeout(window.resizeTimeout);\
-        window.resizeTimeout = setTimeout(setupCanvas, 250);\
-    \});\
-\}\
-\
-// --- Start the app ---\
-document.addEventListener('DOMContentLoaded', initialize);\
-\pard\pardeftab720\sa240\partightenfactor0
+// Available colors for the palette
+const colors = [
+      { name: 'Red', hex: '#EF4444' }, { name: 'Orange', hex: '#F97316' }, { name: 'Amber', hex: '#F59E0B' },
+{ name: 'Yellow', hex: '#EAB308' }, { name: 'Lime', hex: '#84CC16' }, { name: 'Green', hex: '#22C55E' },
+{ name: 'Emerald', hex: '#10B981' }, { name: 'Teal', hex: '#14B8A6' }, { name: 'Cyan', hex: '#06B6D4' },
+{ name: 'Sky', hex: '#0EA5E9' }, { name: 'Blue', hex: '#3B82F6' }, { name: 'Indigo', hex: '#6366F1' },
+{ name: 'Violet', hex: '#8B5CF6' }, { name: 'Purple', hex: '#A855F7' }, { name: 'Fuchsia', hex: '#D946EF' },
+{ name: 'Pink', hex: '#EC4899' }, { name: 'Rose', hex: '#F43F5E' },
+{ name: 'Slate Gray', hex: '#64748B'}, { name: 'Black', hex: '#000000'}, { name: 'White', hex: '#FFFFFF'}
+];
 
-\f0\fs24 \cf0 </script>
-\f1\fs26 \
-\pard\pardeftab720\partightenfactor0
-\cf0 &lt;/body&gt;\
-&lt;/html&gt;\
-\pard\pardeftab720\sa240\partightenfactor0
-
-\f0\fs24 \cf0 &lt;/immersive>\
+// --- Initialization ---
+function initialize() {
+    setupCanvas();
+    populateColorPalette();
+    addEventListeners();
+    selectColorButton(colorPaletteContainer.firstChild); // Select the first color by default
 }
+
+// --- Canvas Setup ---
+function setupCanvas() {
+    // Set canvas dimensions based on its displayed size
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = rect.width * dpr;
+    canvas.height = rect.height * dpr;
+    ctx.scale(dpr, dpr); // Scale context for HiDPI displays
+
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.strokeStyle = currentColor;
+    ctx.lineWidth = currentLineWidth;
+    clearCanvas(); // Fill with white initially
+}
+
+// --- Color Palette ---
+function populateColorPalette() {
+    colors.forEach(colorObj => {
+        const button = document.createElement('button');
+        button.style.backgroundColor = colorObj.hex;
+        button.setAttribute('data-color', colorObj.hex);
+        button.setAttribute('aria-label', colorObj.name);
+        button.className = 'color-button w-full h-10 rounded-md border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-sky-400';
+        if (colorObj.hex === '#FFFFFF') { // Special styling for white button
+            button.classList.add('border-slate-400');
+        }
+        button.addEventListener('click', () => {
+            currentColor = colorObj.hex;
+            ctx.strokeStyle = currentColor;
+            // Update selected state for buttons
+            document.querySelectorAll('#colorPalette .color-button').forEach(btn => btn.classList.remove('selected', 'border-sky-400'));
+            selectColorButton(button);
+        });
+        colorPaletteContainer.appendChild(button);
+    });
+}
+
+function selectColorButton(buttonElement) {
+    if (buttonElement) {
+        buttonElement.classList.add('selected', 'border-sky-400');
+        currentColor = buttonElement.getAttribute('data-color');
+        ctx.strokeStyle = currentColor;
+    }
+}
+
+// --- Drawing Logic ---
+function getMousePos(event) {
+    const rect = canvas.getBoundingClientRect();
+    let x, y;
+    if (event.touches && event.touches.length > 0) {
+        x = event.touches[0].clientX - rect.left;
+        y = event.touches[0].clientY - rect.top;
+    } else {
+        x = event.clientX - rect.left;
+        y = event.clientY - rect.top;
+    }
+    return { x, y };
+}
+
+function startDrawing(event) {
+    event.preventDefault(); // Prevent scrolling on touch
+    drawing = true;
+    const { x, y } = getMousePos(event);
+    ctx.beginPath();
+    ctx.moveTo(x, y);
+}
+
+function draw(event) {
+    event.preventDefault();
+    if (!drawing) return;
+    const { x, y } = getMousePos(event);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+}
+
+function stopDrawing(event) {
+    event.preventDefault();
+    if (!drawing) return;
+    drawing = false;
+    ctx.closePath();
+}
+
+// --- Sound Generation ---
+async function generateAndPlaySound() {
+    showMessage("Processing doodle... please wait.", "info");
+    playSoundButton.disabled = true;
+    clearCanvasButton.disabled = true;
+
+    await Tone.start(); // Ensure AudioContext is started by user gesture
+
+    // Create a synth. Using a simple FM Synth.
+    const synth = new Tone.Synth({
+        oscillator: { type: "sine" }, // sine, square, triangle, sawtooth
+        envelope: {
+            attack: 0.01,
+            decay: 0.2,
+            sustain: 0.1,
+            release: 0.5,
+        },
+    }).toDestination();
+    
+    // Create a reverb for a bit more atmosphere
+    const reverb = new Tone.Reverb(0.7).toDestination();
+    synth.connect(reverb);
+
+    // Analyze canvas data
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const data = imageData.data; // RGBA array
+
+    const notes = [];
+    const pixelsPerNote = 20; // How many horizontal pixels to scan for a "column" of notes
+    const minPitch = 200; // Hz C3
+    const maxPitch = 1000; // Hz B5
+
+    // Iterate through the canvas by columns
+    for (let x = 0; x < canvas.width; x += pixelsPerNote) {
+        let ySum = 0;
+        let count = 0;
+        let rAvg = 0, gAvg = 0, bAvg = 0;
+
+        // Scan a vertical strip
+        for (let y = 0; y < canvas.height; y++) {
+            const index = (y * canvas.width + x) * 4;
+            const r = data[index];
+            const g = data[index + 1];
+            const b = data[index + 2];
+            const a = data[index + 3];
+
+            // Consider non-white and somewhat opaque pixels
+            if (a > 100 && (r < 250 || g < 250 || b < 250)) { 
+                ySum += y;
+                rAvg += r;
+                gAvg += g;
+                bAvg += b;
+                count++;
+            }
+        }
+
+        if (count > 5) { // If enough pixels found in this column
+            const avgY = ySum / count;
+            const pitch = Tone.Midi(Math.floor(Tone.ftom(minPitch + (1 - avgY / canvas.height) * (maxPitch - minPitch)))).toFrequency();
+            
+            // Color influence on note properties (simple example)
+            // Map average R, G, B to something (e.g., duration, volume, or filter)
+            const avgColorBrightness = (rAvg/count + gAvg/count + bAvg/count) / (3 * 255); // Normalized 0-1
+            const duration = 0.1 + avgColorBrightness * 0.3; // Shorter notes for darker colors, longer for brighter
+            const velocity = 0.3 + (1 - avgColorBrightness) * 0.7; // Louder for darker colors
+
+            notes.push({ pitch, time: x / canvas.width, duration, velocity });
+        }
+    }
+
+    if (notes.length === 0) {
+        showMessage("No significant drawing found to make sound. Doodle more!", "warning");
+        playSoundButton.disabled = false;
+        clearCanvasButton.disabled = false;
+        return;
+    }
+    
+    // Schedule and play notes
+    const now = Tone.now();
+    let totalDuration = 0;
+    notes.forEach(note => {
+        synth.triggerAttackRelease(note.pitch, note.duration, now + note.time * 2, note.velocity); // Play over 2 seconds
+        if (now + note.time * 2 + note.duration > totalDuration) {
+            totalDuration = now + note.time * 2 + note.duration;
+        }
+    });
+    
+    showMessage("Playing your doodle sound!", "success");
+
+    // Re-enable buttons after sound finishes (approx)
+    setTimeout(() => {
+        if (Tone.Transport.state === "started") {
+             // Tone.Transport.stop(); // Stop if you were using Transport
+        }
+        showMessage("Sound finished. Feel free to doodle and play again!", "info");
+        playSoundButton.disabled = false;
+        clearCanvasButton.disabled = false;
+    }, (totalDuration - now + 0.5) * 1000); // Add a little buffer
+}
+
+
+// --- UI Helper Functions ---
+function clearCanvas() {
+    ctx.fillStyle = 'white'; // Set fill to white
+    ctx.fillRect(0, 0, canvas.width / (window.devicePixelRatio || 1) , canvas.height/ (window.devicePixelRatio || 1)); // Clear considering DPR
+    ctx.strokeStyle = currentColor; // Reset stroke color
+    showMessage("Canvas cleared. Ready to doodle!", "info");
+}
+
+function showMessage(text, type = "info") {
+    messageText.textContent = text;
+    messageBox.classList.remove('hidden', 'bg-sky-600', 'bg-yellow-500', 'bg-red-600', 'bg-slate-700');
+    messageBox.classList.add('opacity-100');
+
+    if (type === "success") {
+        messageBox.classList.add('bg-green-500');
+    } else if (type === "warning") {
+        messageBox.classList.add('bg-yellow-500');
+    } else if (type === "error") {
+        messageBox.classList.add('bg-red-600');
+    } else { // info
+        messageBox.classList.add('bg-sky-600');
+    }
+    
+    // Hide message after some time
+    setTimeout(() => {
+         messageBox.classList.add('hidden');
+         messageBox.classList.remove('opacity-100');
+    }, 4000);
+}
+
+// --- Event Listeners ---
+function addEventListeners() {
+    // Mouse events
+    canvas.addEventListener('mousedown', startDrawing);
+    canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing);
+    canvas.addEventListener('mouseleave', stopDrawing); // Stop drawing if mouse leaves canvas
+
+    // Touch events
+    canvas.addEventListener('touchstart', startDrawing, { passive: false });
+    canvas.addEventListener('touchmove', draw, { passive: false });
+    canvas.addEventListener('touchend', stopDrawing, { passive: false });
+    canvas.addEventListener('touchcancel', stopDrawing, { passive: false });
+
+
+    playSoundButton.addEventListener('click', generateAndPlaySound);
+    clearCanvasButton.addEventListener('click', clearCanvas);
+
+    // Resize canvas when window resizes
+    window.addEventListener('resize', () => {
+        // Debounce resize event for performance
+        clearTimeout(window.resizeTimeout);
+        window.resizeTimeout = setTimeout(setupCanvas, 250);
+    });
+}
+
+// --- Start the app ---
+document.addEventListener('DOMContentLoaded', initialize);
+</script>
+
+
+&lt;/body&gt;
+&lt;/html&gt;
+&lt;/immersive>
